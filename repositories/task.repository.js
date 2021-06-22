@@ -23,7 +23,7 @@ module.exports.addTask = async function(name, description, date, user) {
 module.exports.updateTaks = async function(task) {
   let d = task.date.substring(0, 10);
   try {
-    let result= await Task.findByIdAndUpdate(
+    let result = await Task.findByIdAndUpdate(
       { _id: task._id },
       {
         name: task.name,
@@ -33,7 +33,7 @@ module.exports.updateTaks = async function(task) {
       },
       { new: true }
     );
-    return { message: "Uspesno promenjeno!", isUpdated: true, task: result }
+    return { message: "Uspesno promenjeno!", isUpdated: true, task: result };
   } catch (error) {
     console.log(error);
   }
@@ -50,6 +50,7 @@ module.exports.dateTasks = async function(user, date) {
   try {
     let d = date.substring(0, 10);
     let tasks = await Task.find({ userId: user._id, date: new Date(d) });
+    console.log(tasks);
     return tasks;
   } catch (error) {
     console.log(error);

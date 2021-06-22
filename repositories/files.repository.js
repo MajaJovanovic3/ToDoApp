@@ -10,34 +10,41 @@ module.exports.uploadFile = async function(req, res, user) {
       cb(null, Date.now() + "-" + file.originalname);
     }
   });
-  let upload = multer({ storage: fileStorage }).single("myFile");
+  let upload = multer({ storage: fileStorage }).array("myFile", 5);
   let promise = new Promise((resolve, reject) => {
     upload(req, res, async err => {
       if (err) {
         console.log(err);
       } else {
-        let task = await Task.findOneAndUpdate(
+         let task=null;
+         let count=req.files.length;
+        for(let i=0;i<req.files.length;i++){
+         task =await Task.findOneAndUpdate(
           {
             _id: req.body.taskId,
             userId: user._id
           },
-          { $push: { files: req.file.filename } },
+          { $push: { files: req.files[i].filename } },
           { new: true }
         ).exec();
-        if (task != null) resolve(task);
-        console.log(task);
+        }
+        let response={task:task, count:count}
+        if (task != null) resolve(response);
       }
     });
   }).catch(error => {
     console.log(error);
     throw error;
   });
-  let task = await promise;
-  if (task != null) {
-    console.log(task);
+  let response = await promise;
+  let message
+  if(response.count>1 ) 
+ message=response.count + " files have been uploaded successfully!" 
+ else message=response.count + " file has been uploaded successfully!"
+  if (response.task != null) {
     return {
-      message: "File has been uploaded successfully!",
-      task: task,
+      message: message,
+      task: response.task,
       status: "OK"
     };
   } else return { message: "An error has occurred!" };
