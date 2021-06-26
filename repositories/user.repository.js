@@ -30,11 +30,10 @@ module.exports.loginUser = async function(username, password, res) {
         algorithm: "HS256",
         expiresIn: process.env.ACCESS_TOKEN_LIFE
       });
-      res.cookie("jwt", token, { secure: false, httpOnly: true });
       return {
         message: "Uspesno ste se ulogovali",
         isLogged: true,
-        token: token,
+        token,
         user: user
       };
     } else
@@ -46,6 +45,22 @@ module.exports.loginUser = async function(username, password, res) {
     return {
       message: "Niste uneli dobre parametre",
       isLogged: false
+    };
+    console.log(error);
+  }
+};
+module.exports.changePasswordUser = async function(password, user, res) {
+  try {
+    let hashPassword = await bcrypt.hash(password, saltRounds);
+    let userChange = await User.findOneAndUpdate({ _id: user._id },{password:hashPassword}).exec();
+      return {
+        message: "Password has been successfully changed!",
+        isChanged: true
+      };
+  } catch (error) {
+    return {
+      message: "An error occured!",
+      isChanged: false
     };
     console.log(error);
   }

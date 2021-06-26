@@ -15,4 +15,10 @@ router.post(
 router.post("/date-tasks", AuthMiddleware.verify, TaskController.dateTasks);
 router.post("/update-task", AuthMiddleware.verify, TaskController.updateTaks);
 router.post("/upload-files", AuthMiddleware.verify, FilesController.uploadFile);
+router.post(
+  "/change-password",
+  AuthMiddleware.verify,
+  UserController.changePasswordUser
+);
+router.post("/delete-task", AuthMiddleware.verify, TaskController.deleteTask);
 module.exports = router;

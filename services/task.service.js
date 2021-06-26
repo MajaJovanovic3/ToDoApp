@@ -20,3 +20,6 @@ module.exports.allUsersTasks = async function(req, res) {
 module.exports.dateTasks = async function(req, res) {
   res.send(await TaskRepository.dateTasks(req.user, req.body.date));
 };
+module.exports.deleteTask = async function(req, res) {
+  res.send(await TaskRepository.deleteTask(req.body.id, res));
+};

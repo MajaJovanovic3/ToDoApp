@@ -6,3 +6,6 @@ module.exports.registerUser = async function (req,res) {
 module.exports.loginUser = async function (req,res) {
     res.send(await UserRepository.loginUser(req.body.username, req.body.password,res))
 }
+module.exports.changePasswordUser = async function (req,res) {
+    res.send(await UserRepository.changePasswordUser(req.body.password, req.user,res))
+}

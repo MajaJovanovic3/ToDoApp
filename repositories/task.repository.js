@@ -2,6 +2,7 @@ const Task = require("../models/task.models");
 
 module.exports.addTask = async function(name, description, date, user) {
   try {
+    console.log(date);
     let d = date.substring(0, 10);
     if (!name) return { message: "Niste uneli ime" };
     else if (!description) return { message: "Niste uneli opis zadaka" };
@@ -14,7 +15,7 @@ module.exports.addTask = async function(name, description, date, user) {
         userId: user._id
       });
       let result = await task.save();
-      return { message: "Uspesno sacuvano!", isSaved: true, task: result };
+      return { message: "Successfully saved!", isSaved: true, task: result };
     }
   } catch (error) {
     console.log(error);
@@ -33,7 +34,7 @@ module.exports.updateTaks = async function(task) {
       },
       { new: true }
     );
-    return { message: "Uspesno promenjeno!", isUpdated: true, task: result };
+    return { message: " Successfully changed!", isUpdated: true, task: result };
   } catch (error) {
     console.log(error);
   }
@@ -47,12 +48,25 @@ module.exports.allUsersTasks = async function(user) {
   }
 };
 module.exports.dateTasks = async function(user, date) {
+  console.log(user);
   try {
     let d = date.substring(0, 10);
     let tasks = await Task.find({ userId: user._id, date: new Date(d) });
-    console.log(tasks);
     return tasks;
   } catch (error) {
+    console.log(error);
+  }
+};
+module.exports.deleteTask = async function(id) {
+  console.log(id);
+  try {
+    await Task.findByIdAndRemove(id);
+    return { message: "Successfully deleted!", isDeleted: true };
+  } catch (error) {
+    return {
+      message: "An error occured! Please, try again!",
+      isDeleted: false
+    };
     console.log(error);
   }
 };
